@@ -1,10 +1,13 @@
 package com.cuneytokankaya.homework.reportingapi.controller;
 
 import com.cuneytokankaya.homework.reportingapi.model.Merchant;
+import com.cuneytokankaya.homework.reportingapi.model.request.RequestGetMerchantById;
 import com.cuneytokankaya.homework.reportingapi.model.request.RequestLogin;
 import com.cuneytokankaya.homework.reportingapi.model.response.ResponseError;
+import com.cuneytokankaya.homework.reportingapi.model.response.ResponseGetMerchantById;
 import com.cuneytokankaya.homework.reportingapi.model.response.ResponseLogin;
 import com.cuneytokankaya.homework.reportingapi.security.JwtUtil;
+import com.cuneytokankaya.homework.reportingapi.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +17,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-
 @RestController
 @RequestMapping("/api/v3/merchant")
 public class MerchantController {
+
+    @Autowired
+    public MerchantService merchantService;
 
     @Autowired
     public AuthenticationManager authenticationManager;
@@ -46,9 +50,21 @@ public class MerchantController {
         }
     }
 
-    @PostMapping("/test")
-    public String test(){
-        return "test";
+    @PostMapping("/get")
+    public ResponseGetMerchantById getMerchantById(@RequestBody RequestGetMerchantById requestGetMerchantById)
+    {
+        Merchant merchant = merchantService.getMerchantById(requestGetMerchantById.getId());
+        ResponseGetMerchantById responseGetMerchantById = new ResponseGetMerchantById();
+        responseGetMerchantById.setMerchant(merchant);
+
+        return responseGetMerchantById;
     }
+
+    @PostMapping("/save")
+    public Merchant saveMerchant(@RequestBody Merchant merchant)
+    {
+        return merchantService.saveMerchant(merchant);
+    }
+
 }
 

@@ -37,8 +37,9 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeRequests()
                 .requestMatchers("/api/v3/merchant/user/login").permitAll() //Sadece bu linkten gelen isteklere izin ver, token isteme
-                .anyRequest()
-                .authenticated()
+                .requestMatchers("/h2-console").permitAll() //Sadece bu linkten gelen isteklere izin ver, token isteme
+                //.anyRequest()
+                //.authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

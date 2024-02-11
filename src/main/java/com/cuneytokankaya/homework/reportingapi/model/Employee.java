@@ -4,16 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "acquirer")
+@Table(name = "employees")
 @Data
-public class Acquirer {
+public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "name")
-    private String name;
-    @Column(name = "code")
-    private String code;
-    @Column(name = "type")
-    private String type;
+    private  String name;
 }

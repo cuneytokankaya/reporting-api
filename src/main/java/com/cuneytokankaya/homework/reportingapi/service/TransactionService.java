@@ -1,13 +1,13 @@
 package com.cuneytokankaya.homework.reportingapi.service;
 
+import com.cuneytokankaya.homework.reportingapi.model.Acquirer;
+import com.cuneytokankaya.homework.reportingapi.model.Customer;
+import com.cuneytokankaya.homework.reportingapi.model.Merchant;
 import com.cuneytokankaya.homework.reportingapi.model.Transaction;
 import com.cuneytokankaya.homework.reportingapi.model.request.RequestGetTransactionList;
 import com.cuneytokankaya.homework.reportingapi.model.request.RequestGetTransactionsReport;
 import com.cuneytokankaya.homework.reportingapi.model.response.*;
-import com.cuneytokankaya.homework.reportingapi.repository.AcquirerRepository;
-import com.cuneytokankaya.homework.reportingapi.repository.CustomerRepository;
-import com.cuneytokankaya.homework.reportingapi.repository.MerchantRepository;
-import com.cuneytokankaya.homework.reportingapi.repository.TransactionRepository;
+import com.cuneytokankaya.homework.reportingapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,10 +78,7 @@ public class TransactionService {
                 requestGetTransactionList.getMerchantId(),
                 requestGetTransactionList.getAcquirerId(),
                 requestGetTransactionList.getPaymentMethod(),
-                requestGetTransactionList.getErrorCode(),
-                requestGetTransactionList.getFilterField(),
-                requestGetTransactionList.getFilterValue(),
-                requestGetTransactionList.getPage()
+                requestGetTransactionList.getErrorCode()
         );
 
         ResponseGetTransactionList responseGetTransactionList = new ResponseGetTransactionList();
@@ -107,16 +105,19 @@ public class TransactionService {
     public ResponseGetTransactionData getTransactionById(String transactionId)
             throws Exception
     {
-        Transaction transaction = transactionRepository.getTransactionById(transactionId);
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId);
 
         ResponseGetTransactionData responseGetTransactionData = new ResponseGetTransactionData();
         if(transaction != null )
         {
             //TODO : transaction modeli diğer modellerle iliskili olmalidir
+            Optional<Merchant> merchant = merchantRepository.findById(transaction.getMerchantId());
+            Optional<Acquirer> acquirer = acquirerRepository.findById(transaction.getAcquirerId());
+            Optional<Customer> customer = customerRepository.findById(transaction.getCustomerId());
+            responseGetTransactionData.setMerchant(merchant.isPresent() ? merchant.get() : null);
+            responseGetTransactionData.setAcquirer(acquirer.isPresent() ? acquirer.get() : null);
+            responseGetTransactionData.setCustomer(customer.isPresent() ? customer.get() : null);
             responseGetTransactionData.setTransaction(transaction);
-            responseGetTransactionData.setMerchant(merchantRepository.getMerchantById(transaction.getMerchantId()));
-            responseGetTransactionData.setAcquirer(acquirerRepository.getAcquirerById(transaction.getAcquirerId()));
-            responseGetTransactionData.setCustomer(customerRepository.getCustomerById(transaction.getCustomerId()));
         }
 
         return responseGetTransactionData;

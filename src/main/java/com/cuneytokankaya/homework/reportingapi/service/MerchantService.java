@@ -5,15 +5,23 @@ import com.cuneytokankaya.homework.reportingapi.repository.MerchantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class MerchantService {
+public class MerchantService
+{
+    @Autowired
+    private MerchantRepository merchantRepository;
 
-        @Autowired
-        public MerchantRepository merchantRepository;
+    public Merchant getMerchantById(Long id)
+    {
+        Optional<Merchant> merchant = merchantRepository.findById(id);
 
-        public Merchant getMerchantById(Long id)
-        {
-             return merchantRepository.getMerchantById(id);
-        }
+        return merchant.isPresent() ? merchant.get() : null;
+    }
 
+    public Merchant saveMerchant(Merchant merchant)
+    {
+        return merchantRepository.save(merchant);
+    }
 }
