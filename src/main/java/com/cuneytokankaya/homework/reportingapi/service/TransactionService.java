@@ -1,5 +1,6 @@
 package com.cuneytokankaya.homework.reportingapi.service;
 
+import com.cuneytokankaya.homework.reportingapi.constant.Constants;
 import com.cuneytokankaya.homework.reportingapi.model.Acquirer;
 import com.cuneytokankaya.homework.reportingapi.model.Customer;
 import com.cuneytokankaya.homework.reportingapi.model.Merchant;
@@ -9,6 +10,8 @@ import com.cuneytokankaya.homework.reportingapi.model.request.RequestGetTransact
 import com.cuneytokankaya.homework.reportingapi.model.response.*;
 import com.cuneytokankaya.homework.reportingapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -70,6 +73,8 @@ public class TransactionService {
 
     public ResponseGetTransactionList getTransactionList(RequestGetTransactionList requestGetTransactionList) throws Exception {
 
+        Pageable pageable = PageRequest.of(requestGetTransactionList.getPage()-1, Constants.PAGE_SIZE);
+
         List<Transaction> transactionList = transactionRepository.getTransactionList(
                 requestGetTransactionList.getFromDate(),
                 requestGetTransactionList.getToDate(),
@@ -78,16 +83,16 @@ public class TransactionService {
                 requestGetTransactionList.getMerchantId(),
                 requestGetTransactionList.getAcquirerId(),
                 requestGetTransactionList.getPaymentMethod(),
-                requestGetTransactionList.getErrorCode()
+                requestGetTransactionList.getErrorCode(),pageable
         );
 
         ResponseGetTransactionList responseGetTransactionList = new ResponseGetTransactionList();
         if(transactionList != null && transactionList.size()>0)
         {
             responseGetTransactionList.setCurrentPage(requestGetTransactionList.getPage());
-            responseGetTransactionList.setFrom(requestGetTransactionList.getPage() * 2 - 1);
-            responseGetTransactionList.setTo(((requestGetTransactionList.getPage()-1) * 2) + transactionList.size());
-            responseGetTransactionList.setPerPage(2);
+            responseGetTransactionList.setFrom(requestGetTransactionList.getPage() * Constants.PAGE_SIZE - 1);
+            responseGetTransactionList.setTo(((requestGetTransactionList.getPage()-1) * Constants.PAGE_SIZE) + transactionList.size());
+            responseGetTransactionList.setPerPage(Constants.PAGE_SIZE);
 
             List<ResponseGetTransactionData> responseGetTransactionDataList = new ArrayList<>();
             for (Transaction transaction: transactionList)

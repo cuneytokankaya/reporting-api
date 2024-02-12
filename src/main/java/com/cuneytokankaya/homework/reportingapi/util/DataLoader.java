@@ -79,7 +79,7 @@ public class DataLoader implements ApplicationRunner {
         return Arrays.asList(m1,m2,m3,m4,m5);
     }
 
-    private List<Transaction> getDummyTransactions() throws  Exception
+    public static List<Transaction> getDummyTransactions() throws  Exception
     {
         DateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -90,8 +90,8 @@ public class DataLoader implements ApplicationRunner {
         t1.setTransactionCurrency("EUR");
         t1.setIpn("true");
         t1.setReferenceNo("123456");
-        t1.setStatus("WAITING");
-        t1.setChannel("CREDITCARD");
+        t1.setStatus("APPROVED");
+        t1.setChannel("WEB");
         t1.setPaymentMethod("CREDITCARD");
         t1.setChainId("123");
         t1.setOperation("DIRECT");
@@ -116,8 +116,8 @@ public class DataLoader implements ApplicationRunner {
         t2.setIpn("true");
         t2.setReferenceNo("223456");
         t2.setStatus("WAITING");
-        t2.setChannel("CREDITCARD");
-        t2.setPaymentMethod("CREDITCARD");
+        t2.setChannel("WEB");
+        t2.setPaymentMethod("CASH");
         t2.setChainId("223");
         t2.setOperation("DIRECT");
         t2.setCode("20");
@@ -190,9 +190,9 @@ public class DataLoader implements ApplicationRunner {
         t5.setTransactionCurrency("USD");
         t5.setIpn("true");
         t5.setReferenceNo("523456");
-        t5.setStatus("WAITING");
+        t5.setStatus("APPROVED");
         t5.setChannel("CREDITCARD");
-        t5.setPaymentMethod("CREDITCARD");
+        t5.setPaymentMethod("CASH");
         t5.setChainId("523");
         t5.setOperation("DIRECT");
         t5.setCode("50");
@@ -213,7 +213,7 @@ public class DataLoader implements ApplicationRunner {
         );
     }
 
-    public List<Acquirer> getDummyAcquirers()
+    public static List<Acquirer> getDummyAcquirers()
     {
         Acquirer a1 = new Acquirer();
         a1.setId(1L);
@@ -248,7 +248,7 @@ public class DataLoader implements ApplicationRunner {
         return Arrays.asList(a1,a2,a3,a4,a5);
     }
 
-    public List<Customer> getDummyCustomers()
+    public static List<Customer> getDummyCustomers()
     {
         Customer c1 = new Customer();
         c1.setNumber("Customer 1");

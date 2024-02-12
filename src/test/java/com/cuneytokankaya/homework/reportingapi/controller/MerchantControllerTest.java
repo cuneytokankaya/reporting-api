@@ -1,48 +1,48 @@
 package com.cuneytokankaya.homework.reportingapi.controller;
 
+import com.cuneytokankaya.homework.reportingapi.model.request.RequestLogin;
+import com.cuneytokankaya.homework.reportingapi.security.JwtUtil;
+import com.cuneytokankaya.homework.reportingapi.service.MerchantService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+
+@WebMvcTest(MerchantController.class)
 class MerchantControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    private MerchantService merchantService;
 
+    @MockBean
+    public AuthenticationManager authenticationManager;
+
+    @MockBean
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @Test
-    void login()
+    void login() throws Exception
     {
-        /*
-        mvc.perform(get("/api/employees")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].name", is("bob")));
-                */
-    }
+        // /api/v3/merchant/user/login
+        RequestLogin requestLogin = new RequestLogin("ali.kaya@email","ali.kaya");
 
-
-    @Test
-    public void givenEmployees_whenGetEmployees_thenStatus200()
-            throws Exception {
-
-        /*
-        createTestEmployee("bob");
-         */
-
-
+         mvc.perform(post("/api/v3/merchant/user/login")
+                        .content(objectMapper.writeValueAsString(requestLogin))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isForbidden());
     }
 
 }

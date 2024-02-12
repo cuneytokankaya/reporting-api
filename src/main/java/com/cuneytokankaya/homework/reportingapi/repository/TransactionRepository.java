@@ -43,5 +43,5 @@ public interface TransactionRepository extends JpaRepository<Transaction,Long>
                                                 Long merchantId,
                                                 Long acquirerId,
                                                 String paymentMethod,
-                                                String errorCode);
+                                                String errorCode, Pageable pageable);
 }
